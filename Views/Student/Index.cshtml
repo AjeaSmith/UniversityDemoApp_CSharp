@@ -1,0 +1,33 @@
+﻿@model IEnumerable<UniversityDemo.Models.StudentModel>
+
+<div class="container">
+   <div class="row">
+      <div class="col">
+         <h1 class="display-4">List of Students</h1>
+         <p>@Html.ActionLink("Create New", "Create")</p>
+      </div>
+   </div>
+   <div class="row">
+      <div class="col">
+         <table class="table">
+            <tbody>
+               @foreach(var m in Model)
+               {
+                <tr>
+                   <th scope="row">@m.StudentId</th>
+                   <td>@m.FirstName</td>
+                   <td>@m.LastName</td>
+                   <td>@m.EnrollmentDate</td>
+                   <td>
+                     @Html.ActionLink("Edit", "Edit", new { id=m.StudentId }) |
+                     @Html.ActionLink("Details", "Details", new { id=m.StudentId }) |
+                     @Html.ActionLink("Delete", "Delete", new { id=m.StudentId })
+                   </td>
+                </tr>
+               }
+            </tbody>
+        </table>
+      </div>
+   </div>
+</div>
+

@@ -1,0 +1,37 @@
+﻿@model UniversityDemo.Models.StudentModel
+
+<div class="container">
+  <div class="row align-items-center">
+    <div class="col-sm">
+        <div class="card">
+          <h1>@Model.FirstName</h1>
+          <p>@Model.LastName</p>
+          <p class="title">@Model.EnrollmentDate</p>
+          <p><button class="deleteBtn">Delete</button></p>
+        </div>
+    </div>
+    <div class="col-md">
+        <h1 class="display-4 my-3"> Student - @Html.DisplayNameFor(model => model.Enrollments)</h1>
+      <table class="table table-sm">
+         <thead>
+           <tr>
+             <th scope="col">Course Title</th>
+             <th scope="col">Grade</th>
+           </tr>
+         </thead>
+         <tbody>
+           @foreach (var item in Model.Enrollments) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Course.Title)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Grade)
+        </td>
+    </tr>
+}
+         </tbody>
+     </table>
+    </div>
+  </div>
+</div>
