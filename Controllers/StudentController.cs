@@ -44,6 +44,7 @@ namespace UniversityDemo.Controllers
         {
             return View();
         }
+
         [HttpPost]
         public IActionResult CreateStudent([Bind("LastName, FirstName, EnrollmentDate")] StudentModel student)
         {
