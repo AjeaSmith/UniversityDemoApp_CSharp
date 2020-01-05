@@ -20,6 +20,7 @@ namespace UniversityDemo.Models
 
         [Display(Name = "Date of Enrollment")]
         [DataType(DataType.Date, ErrorMessage = "This must a date format. e.g. mm/dd/yyyy ")]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime EnrollmentDate { get; set; }
 
         public List<EnrollmentModel> Enrollments { get; set; }

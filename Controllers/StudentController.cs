@@ -1,6 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using UniversityDemo.DAL;
 using UniversityDemo.Models;
 
@@ -22,10 +25,6 @@ namespace UniversityDemo.Controllers
 
             return View(students);
         }
-        public IActionResult Edit()
-        {
-            return View();
-        }
         public IActionResult Details(int? id)
         {
             if (id == null)
@@ -33,11 +32,11 @@ namespace UniversityDemo.Controllers
                 return BadRequest();
             }
             var students = _context.Students.Include(s => s.Enrollments).ThenInclude(c => c.Course).FirstOrDefault(m => m.StudentId == id);
-            if(students == null)
+            if (students == null)
             {
                 return NotFound();
             }
-            
+
             return View(students);
         }
         public IActionResult Create()
@@ -48,18 +47,64 @@ namespace UniversityDemo.Controllers
         [HttpPost]
         public IActionResult CreateStudent([Bind("LastName, FirstName, EnrollmentDate")] StudentModel student)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 RedirectToAction("Create", "Student");
             }
 
-            _context.Students.AddRange(student);
+            _context.Students.Add(student);
             _context.SaveChanges();
 
             return RedirectToAction("Index", "Student");
         }
+
+        public IActionResult Edit(int? id)
+        {
+            if(id == null)
+            {
+                return BadRequest();
+            }
+            var student = _context.Students.Find(id);
+            if(student == null)
+            {
+                return NotFound();
+            }
+            return View(student);
+        }
+
+        [HttpPost, ActionName("Edit")]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> EditPost(int? id)
+        {
+            if (id == null)
+            {
+                return BadRequest();
+            }
+            var studentToUpdate = _context.Students.Find(id);
+            if (await TryUpdateModelAsync(studentToUpdate, "", s => s.FirstName, s => s.LastName, s => s.EnrollmentDate))
+            {
+                try
+                {
+                    await _context.SaveChangesAsync();
+
+                    return RedirectToAction("Index");
+                }
+                catch (RetryLimitExceededException /* dex */)
+                {
+                    //Log the error (uncomment dex variable name and add a line here to write a log.
+                    ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, see your system administrator.");
+                }
+            }
+            return View(studentToUpdate);
+        }
     }
+        
 }
+
+
+
+
+
 
 
 
