@@ -31,13 +31,14 @@ namespace UniversityDemo.Controllers
             {
                 return BadRequest();
             }
-            var students = _context.Students.Include(s => s.Enrollments).ThenInclude(c => c.Course).FirstOrDefault(m => m.StudentId == id);
-            if (students == null)
+            var student = _context.Students.Include(s => s.Enrollments).ThenInclude(c => c.Course)
+                .FirstOrDefault(m => m.StudentId == id);
+            if (student == null)
             {
                 return NotFound();
             }
 
-            return View(students);
+            return View(student);
         }
         public IActionResult Create()
         {
